@@ -18,23 +18,50 @@ class PlayfairCipher {
     }
 
     public static void main(String[] args) {
+        String plainText;
         // String plainText = "INSTRUMENT";
-
-        Scanner sc = new Scanner(System.in);
-        String plainText = sc.nextLine();
-
+        boolean debug = false;
+        
         PlayfairCipher cipher = new PlayfairCipher();
 
-        String cipherText = cipher.encrypt(plainText);
-        System.out.println("ciphered : " + cipherText);
+        //for debugging 
+        if(debug){
+            Scanner sc = new Scanner(System.in);
+            plainText = sc.nextLine();
+        
+            String cipherText = cipher.encrypt(plainText);
+            System.out.println("encrypted : " + cipherText);
+            System.out.println("decrypted : " + cipher.decrypt(cipherText));
+        
+            sc.close();
+        }
+        if(debug) return;
 
-        System.out.println("og : " + cipher.decrypt(cipherText));
+        //CLI
+        boolean valid = args.length > 0;
+        if(valid && args[0].equals("-e")){
+            plainText = cipher.toString(args,1,args.length - 1);
+            System.out.println(cipher.encrypt(plainText));
+        }
+        else if(valid && args[0].equals("-d")){
+            String encryptedText = cipher.toString(args,1,args.length - 1);
+            System.out.println(cipher.decrypt(encryptedText));
+        }else {
+            System.out.println("use it like this :");
+            System.out.println("\t\t PlayfairCipher -e/-d input");
+        }
 
-        sc.close();
+
     }
 
 //------------------------------------------------------------------------------------UTILITIES--------------------------------------------------------------------------------------
 
+    //convert CLI arr to string
+    public String toString(String[] arr,int i,int j){
+        StringBuilder sb = new StringBuilder();
+        while(i <= j) sb.append(arr[i++] + " ");
+        return sb.toString();
+    }
     // get key
     public String getKey() {
         return KEY;
